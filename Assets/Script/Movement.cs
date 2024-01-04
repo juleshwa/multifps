@@ -5,8 +5,16 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
 
-    public float walkspeed = 4f;
+    public float walkspeed = 8f;
     public float maxVelocityChange = 10f;
+    public float sprintSpeed = 14f;
+
+    [Space]
+
+    private bool sprinting;
+    private bool jumping;
+    private bool grounded;
+
 
     private Vector2 input;
     private Rigidbody rb;
@@ -23,11 +31,22 @@ public class Movement : MonoBehaviour
     {
         input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         input.Normalize();
+        sprinting = Input.GetButton("Sprint");
+        // sprinting = true;
     }
 
     void FixedUpdate()
     {
-        rb.AddForce(CalculateMovement(walkspeed), ForceMode.VelocityChange);
+        if(input.magnitude > 0.5f)
+        {
+            rb.AddForce(CalculateMovement(sprinting ? sprintSpeed : walkspeed), ForceMode.VelocityChange);
+        } else
+        {
+            var velocity1 = rb.velocity;
+            velocity1 = new Vector3(velocity1.x * 0.2f * Time.fixedDeltaTime, velocity1.y, velocity1.z * 0.2f * Time.fixedDeltaTime);
+            rb.velocity = velocity1;
+        }
+        
     }
 
     Vector3 CalculateMovement(float _speed)

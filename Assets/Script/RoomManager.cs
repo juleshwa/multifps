@@ -10,6 +10,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [Space]
     public Transform spawnPoint;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -41,12 +42,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         base.OnJoinedRoom();
         Debug.Log("we are connected and in a room ->joined");
         GameObject _player = PhotonNetwork.Instantiate(player.name, spawnPoint.position, Quaternion.identity);
-        if (PhotonNetwork.IsMasterClient) // Only the master client instantiates the player
-        {
-            Debug.Log("true masterClient");
-        } else
-        {
-            Debug.Log("other clent");
-        }
+        _player.GetComponent<PlayerSetup>().IsLocalPlayer();
+
     }
 }
